@@ -22,16 +22,18 @@ services:
     image: search2d/api-php
     depends_on:
       - db
+      - flb
     environment:
       - API_DATABASE_DSN
       - API_LOGGER_NAME
-      - API_LOGGER_PATH
-      - API_LOGGER_LEVEL
-      - API_LOGGER_CWL_REGION
-      - API_LOGGER_CWL_GROUP
-      - API_LOGGER_CWL_STREAM
-      - API_LOGGER_CWL_RETENTION_DAYS
-      - API_LOGGER_CWL_BATCH_SIZE
+      - API_LOGGER_STREAM_ENABLED
+      - API_LOGGER_STREAM_PATH
+      - API_LOGGER_STREAM_LEVEL
+      - API_LOGGER_FLUENT_ENABLED
+      - API_LOGGER_FLUENT_TAG
+      - API_LOGGER_FLUENT_HOST
+      - API_LOGGER_FLUENT_PORT
+      - API_LOGGER_FLUENT_LEVEL
       - API_SEARCH_S3_REGION
       - API_SEARCH_S3_INDEXED_IMAGE_BUCKET
       - API_SEARCH_S3_INDEXED_IMAGE_BASE_URL
@@ -42,6 +44,7 @@ services:
       - API_PIXIV_API_PASSWORD
       - API_PIXIV_API_CLIENT_ID
       - API_PIXIV_API_CLIENT_SECRET
+      - API_PIXIV_API_PROXY
       - API_PIXIV_SQS_REGION
       - API_PIXIV_SQS_REQUEST_ILLUST_URL
       - API_PIXIV_SQS_REQUEST_RANKING_URL
@@ -67,3 +70,11 @@ services:
       - ./database.sql:/docker-entrypoint-initdb.d/database.sql
     environment:
       - MYSQL_ROOT_PASSWORD
+  flb:
+    image: search2d/fluent-bit
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    environment:
+      - AWS_REGION
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
