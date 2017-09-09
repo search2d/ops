@@ -83,9 +83,8 @@ services:
       - MYSQL_ROOT_PASSWORD
   flb:
     image: search2d/fluent-bit
-    volumes:
-      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
     environment:
       - AWS_REGION
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
+      - SERVICE_LOG_LEVEL
